@@ -1,0 +1,39 @@
+# Small, fast configuration for development/debugging (runs in seconds).
+# Same structure as config.yaml but a tiny fixed universe and shorter window.
+
+data:
+  universe: ["AAPL", "MSFT", "KO", "JPM", "XOM", "PG", "HD", "BAC",
+             "CSCO", "PEP", "WMT", "DIS", "V", "MA", "JNJ"]
+  start_date: "2015-01-01"
+  end_date: "2022-01-01"
+  price_source: "yfinance"
+  cache_dir: "data/_small"
+  max_names: 15
+  min_history_days: 400
+
+factors:
+  models: ["fama_french", "pca"]
+  ff_num_factors: 5
+  ff_loadings_window: 60
+  pca_corr_window: 252
+  pca_loadings_window: 60
+  pca_num_factors: 3
+
+signal:
+  lookback: 30
+  models: ["mean_reversion"]
+
+policy:
+  objective: "sharpe"
+  max_gross_leverage: 1.0
+  transaction_cost_bps: 5
+
+train:
+  rolling_train_years: 5
+  val_fraction: 0.15
+  batch_size: 128
+  epochs: 50
+  lr: 0.001
+  device: "cpu"
+
+seed: 42

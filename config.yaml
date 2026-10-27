@@ -1,0 +1,41 @@
+# Configuration for the Deep Learning Statistical Arbitrage pipeline.
+# Free-data reproduction of Guijarro-Ordonez, Pelger & Zanotti (2021), arXiv:2106.04028.
+
+data:
+  # Universe: current S&P 500 constituents (NOTE: survivorship bias — documented in README).
+  universe: "sp500"
+  start_date: "2000-01-01"
+  end_date: "2023-12-31"
+  price_source: "yfinance"        # yfinance | stooq
+  cache_dir: "data"
+  # Liquidity filter: keep the N largest by average dollar volume (proxy for the paper's mkt-cap filter).
+  max_names: 450
+  min_history_days: 756           # ~3 trading years required to enter the universe
+
+factors:
+  # Residual construction via rolling factor models (out-of-sample, no look-ahead).
+  models: ["fama_french", "pca"]  # IPCA dropped (needs paid firm characteristics)
+  ff_num_factors: 5               # CAPM=1, FF3=3, FF5=5, FF5+mom=... (Kenneth French library)
+  ff_loadings_window: 60          # rolling days for FF loading regression
+  pca_corr_window: 252            # rolling days to estimate correlation matrix
+  pca_loadings_window: 60         # rolling days to estimate PCA loadings
+  pca_num_factors: 5
+
+signal:
+  lookback: 30                    # L: number of cumulative residuals fed to the signal model
+  models: ["mean_reversion", "cnn_transformer"]
+
+policy:
+  objective: "sharpe"             # maximize mean/std of portfolio returns
+  max_gross_leverage: 1.0
+  transaction_cost_bps: 5         # round-trip cost assumption for the backtest
+
+train:
+  rolling_train_years: 5          # expanding/rolling OOS evaluation
+  val_fraction: 0.15
+  batch_size: 128
+  epochs: 50
+  lr: 0.001
+  device: "cpu"                   # set to "cuda" / "mps" if available
+
+seed: 42

@@ -1,0 +1,30 @@
+# Data caches (downloaded, large, reproducible)
+data/*
+!data/.gitkeep
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Model artifacts / outputs
+outputs/
+*.pt
+*.ckpt
+
+# Papers: keep locally, do NOT publish (copyright) — README links to arXiv
+papers/
+
+# OS / editor
+.DS_Store
+.idea/
+
+# VSCode: ignore everything except the shared interpreter/debug config
+.vscode/*
+!.vscode/settings.json
+!.vscode/launch.json
